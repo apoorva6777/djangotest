@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: django-app
+  namespace: app2
+spec:
+  selector:
+    matchLabels:
+      app: app
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: app
+    spec:
+      imagePullSecrets:
+      - name: ocirsecret
+      containers:
+      - name: app
+        image: iad.ocir.io/idmaqhrbiuyo/djangoprev:v0.1
+        ports:
+        - containerPort: 8000
+        readinessProbe:
+          httpGet:
+            path: /api/ping
+            port: 8000
+          initialDelaySeconds: 120
+          periodSeconds: 5
+          successThreshold: 2   
+        resources:
+          limits:
+            cpu: "1" 
+            memory: 2Gi
+          requests:
+            cpu: "1"
+            memory: "2Gi"

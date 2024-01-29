@@ -1,0 +1,23 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress  
+metadata:
+  name: django-app-ing
+  namespace: app2
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+spec:
+  tls:
+  - secretName: tls-secret
+  rules:
+  - http:
+      paths:
+      - path: /api/ping
+        pathType: Prefix
+        backend:
+          service:
+            name: django-app-svc
+            port: 
+              number: 80
+
+
